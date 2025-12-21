@@ -1,0 +1,93 @@
+/* 1. Fundalul General */
+        body {
+            background-color: #f0fdf4 !important; /* Verde foarte pal */
+            background-image: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%) !important;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 2. Cardul */
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important;
+            overflow: hidden;
+        }
+
+        /* 3. Imaginea din stânga (Specifică pentru Register) */
+        .bg-register-image {
+            /* Imagine cu un cățel sau pisică diferită de login, tot tematică veterinară */
+            background: url('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+            background-position: center;
+            background-size: cover;
+        }
+
+        /* 4. Titluri și Texte */
+        h1.h4 {
+            color: #2d3748;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* 5. Input-urile (Câmpurile de text) */
+        .form-control-user {
+            border-radius: 12px !important;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem 1rem !important;
+            font-size: 0.9rem;
+            background-color: #f8fafc;
+            transition: all 0.3s;
+        }
+
+        .form-control-user:focus {
+            background-color: #fff;
+            border-color: #38b2ac; /* Verde teal la focus */
+            box-shadow: 0 0 0 0.2rem rgba(56, 178, 172, 0.25);
+        }
+
+        /* 6. Butonul Principal (Register) */
+        .btn-primary {
+            background-color: #319795 !important; /* Verde medical */
+            border-color: #319795 !important;
+            border-radius: 12px !important;
+            font-weight: 700;
+            padding: 0.75rem 1rem;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #2c7a7b !important;
+            transform: translateY(-2px);
+        }
+
+        /* 7. Link-urile mici */
+        .small {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #319795 !important;
+        }
+        .small:hover {
+            color: #234e52 !important;
+            text-decoration: none;
+        }
+
+        /* 8. Butoanele Sociale */
+        .btn-google {
+            border-radius: 12px !important;
+            background-color: #fff !important;
+            color: #ea4335 !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: none !important;
+        }
+        .btn-facebook {
+            border-radius: 12px !important;
+            background-color: #1877f2 !important;
+        }
+        
+        /* 9. Textul de ajutor pt parolă */
+        p {
+            font-size: 0.75rem;
+            color: #718096;
+            margin-bottom: 1rem;
+        }

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fișă Medicală - Puppy Vet</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animal_style.css') }}">
+
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+
+         <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+
+                {% include 'topbar.html' %}
+
+                <div class="container-fluid">
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">{{ message }}<button
+                            type="button" class="close" data-dismiss="alert">&times;</button></div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    {% if setup_needed_animal %}
+                    <div class="card shadow mb-4 border-left-danger">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Înregistrează un Animal Nou</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('show_animal_page') }}">
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3"><label>Nume</label><input type="text"
+                                            class="form-control" name="nume" required></div>
+                                    <div class="col-md-6 mb-3"><label>Rasă</label><input type="text"
+                                            class="form-control" name="rasa" required></div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-4 mb-3"><label>Specie</label><select class="form-control"
+                                            name="specie">
+                                            <option>Câine</option>
+                                            <option>Pisică</option>
+                                        </select></div>
+                                    <div class="col-md-4 mb-3"><label>Vârstă</label><input type="number"
+                                            class="form-control" name="varsta" required></div>
+                                    <div class="col-md-4 mb-3"><label>Sex</label><select class="form-control"
+                                            name="sex">
+                                            <option>M</option>
+                                            <option>F</option>
+                                        </select></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Salvează Animal</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Fișă Medicală: {{ animal.Nume }}</h1>
+                        <div>
+                            <a href="#" class="btn btn-sm btn-info shadow-sm mr-2" data-toggle="modal"
+                                data-target="#editAnimalModal">
+                                <i class="fas fa-edit fa-sm text-white-50"></i> Editează Profil
+                            </a>
+                            <a href="{{ url_for('show_add_visit_form', animal_id=current_animal_id) }}"
+                                class="btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i>
+                                Vizită Nouă</a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Identificare</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ animal.Specie }} | {{
+                                                animal.Rasa }}</div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-paw fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Vârstă
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ animal.Varsta }} Ani
+                                            </div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-birthday-cake fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Sex
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ animal.Sex }}</div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-venus-mars fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <ul class="nav nav-tabs card-header-tabs" id="medicalTabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="visits-tab" data-toggle="tab" href="#visits"
+                                        role="tab"><i class="fas fa-notes-medical mr-2"></i>Istoric Consultații</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="vaccines-tab" data-toggle="tab" href="#vaccines"
+                                        role="tab"><i class="fas fa-syringe mr-2"></i>Vaccinări</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="medicalTabsContent">
+
+                                <div class="tab-pane fade show active" id="visits" role="tabpanel">
+                                    {% if istoric_list %}
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" width="100%" cellspacing="0">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Data</th>
+                                                    <th>Motiv / Diagnostic</th>
+                                                    <th>Parametri</th>
+                                                    <th class="text-center">Acțiuni</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for fisa in istoric_list %}
+                                                <tr>
+                                                    <td style="width: 15%;">{{ fisa.Data_vizite.strftime('%d-%m-%Y') if
+                                                        fisa.Data_vizite else 'N/A' }}</td>
+                                                    <td>
+                                                        <div class="font-weight-bold text-primary">{{ fisa.Motiv_vizita
+                                                            }}</div>
+                                                        <div class="small text-gray-600">{{ fisa.Diagnostic }}</div>
+                                                    </td>
+                                                    <td style="width: 20%;">
+                                                        {% if fisa.Greutate %}<span class="badge-weight mr-2"><i
+                                                                class="fas fa-weight"></i> {{ fisa.Greutate }}
+                                                            kg</span>{% endif %}
+                                                        {% if fisa.Temperatura %}<span class="badge-temp"><i
+                                                                class="fas fa-thermometer-half"></i> {{ fisa.Temperatura
+                                                            }}°C</span>{% endif %}
+                                                    </td>
+                                                    <td class="text-center" style="width: 10%;">
+                                                        <button class="btn btn-danger btn-sm btn-circle"
+                                                            data-toggle="modal"
+                                                            data-target="#deleteVisitModal{{ fisa.Id_fisa }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+
+                                                        <div class="modal fade" id="deleteVisitModal{{ fisa.Id_fisa }}"
+                                                            tabindex="-1" role="dialog" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Șterge Vizita?</h5>
+                                                                        <button class="close" type="button"
+                                                                            data-dismiss="modal"
+                                                                            aria-label="Close"><span
+                                                                                aria-hidden="true">×</span></button>
+                                                                    </div>
+                                                                    <div class="modal-body text-left">
+                                                                        Ești sigur că vrei să ștergi vizita din data de
+                                                                        <strong>{{ fisa.Data_vizite }}</strong>?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Renunță</button>
+                                                                    
+                                                                        <form action="{{ url_for('sterge_vizita', id_fisa=fisa.Id_fisa) }}" method="POST">
+                                                                            <button type="submit" class="btn btn-danger">Da, Șterge</button>
+                                                                        </form>
+                                                                    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center py-5 text-gray-500">Nu există istoric medical înregistrat.
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="tab-pane fade" id="vaccines" role="tabpanel">
+                                    {% if vaccin_list %}
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Data</th>
+                                                    <th>Tip Vaccin</th>
+                                                    <th>Rapel (Următorul)</th>
+                                                    <th class="text-center">Acțiuni</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for v in vaccin_list %}
+                                                <tr>
+                                                    <td>{{ v.Data_vaccinare }}</td>
+                                                    <td class="font-weight-bold text-success">{{ v.Tip_vaccin }}</td>
+                                                    <td>{{ v.Data_rapel }}</td>
+                                                    <td class="text-center" style="width: 10%;">
+
+                                                        <button class="btn btn-danger btn-sm btn-circle"
+                                                            data-toggle="modal"
+                                                            data-target="#deleteVaccinModal{{ v.Id_vaccin }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+
+                                                        <div class="modal fade"
+                                                            id="deleteVaccinModal{{ v.Id_vaccin}}"
+                                                            tabindex="-1" role="dialog" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Șterge Vaccin?</h5>
+                                                                        <button class="close" type="button"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">×</span>
+                                                                        </button>
+                                                                    </div>
+
+                                                                    <div class="modal-body text-left">
+                                                                        Ești sigur că vrei să ștergi vaccinul
+                                                                        <strong>{{ v.Tip_vaccin }}</strong>
+                                                                        din data de <strong>{{ v.Data_vaccinare
+                                                                            }}</strong>?
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                                                                        <button class="btn btn-secondary" type="button"
+                                                                            data-dismiss="modal">Renunță</button>
+
+                                                                        <form
+                                                                            action="{{ url_for('sterge_vaccin', id_vaccin=v.Id_vaccin) }}"
+                                                                            method="POST">
+                                                                            <button type="submit"
+                                                                                class="btn btn-danger">Da,
+                                                                                Șterge</button>
+                                                                        </form>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center py-5 text-gray-500">Nu există vaccinări înregistrate.</div>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="modal fade" id="editAnimalModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title font-weight-bold">
+                                <i class="fas fa-paw mr-2"></i>Editează: {{ animal.Nume }}
+                            </h5>
+                            <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+
+                        <form action="{{ url_for('update_animal_profile', animal_id=current_animal_id) }}"
+                            method="POST">
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label class="small font-weight-bold">Nume</label>
+                                    <input type="text" class="form-control" name="nume" value="{{ animal.Nume }}"
+                                        required>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="small font-weight-bold">Specie</label>
+                                        <select class="form-control" name="specie">
+                                            <option value="Câine" {% if animal.Specie=='Caine' or animal.Specie=='Câine'
+                                                %}selected{% endif %}>Câine</option>
+                                            <option value="Pisică" {% if animal.Specie=='Pisica' or
+                                                animal.Specie=='Pisică' %}selected{% endif %}>Pisică</option>
+                                            <option value="Altul" {% if animal.Specie not in ['Caine', 'Câine'
+                                                , 'Pisica' , 'Pisică' ] %}selected{% endif %}>Altul</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="small font-weight-bold">Rasă</label>
+                                        <input type="text" class="form-control" name="rasa" value="{{ animal.Rasa }}"
+                                            required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="small font-weight-bold">Vârstă (Ani)</label>
+                                        <input type="number" class="form-control" name="varsta"
+                                            value="{{ animal.Varsta }}" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="small font-weight-bold">Sex</label>
+                                        <select class="form-control" name="sex">
+                                            <option value="M" {% if animal.Sex=='M' %}selected{% endif %}>Masculin (M)
+                                            </option>
+                                            <option value="F" {% if animal.Sex=='F' %}selected{% endif %}>Feminin (F)
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Anulează</button>
+                                <button type="submit" class="btn btn-info">Salvează Modificările</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <footer class="sticky-footer bg-white mt-auto">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto"><span>Copyright &copy; Puppy Vet 2025</span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+</body>
+
+</html>

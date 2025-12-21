@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Programări - Puppy Vet</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <style>
+        :root {
+            --vet-primary: #0e8f8f;
+            --vet-dark: #2c3e50;
+            --vet-accent: #ff7043;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* Suprascriere gradient sidebar */
+        .bg-gradient-primary {
+            background-color: var(--vet-primary) !important;
+            background-image: linear-gradient(180deg, var(--vet-primary) 10%, #00695c 100%) !important;
+        }
+
+        /* Stiluri Card Programare */
+        .appointment-card {
+            transition: all 0.3s ease;
+            border-left: 5px solid #ddd;
+        }
+
+        .appointment-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Status Colors (Corectat pentru a se potrivi cu Jinja replace) */
+        .status-InAsteptare { border-left-color: #f6c23e; }
+        .status-Confirmat { border-left-color: #1cc88a; }
+        .status-Anulat { border-left-color: #e74a3b; }
+        .status-Finalizat { border-left-color: #36b9cc; }
+
+        /* Caseta Data */
+        .date-box {
+            background: #f8f9fc;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            min-width: 80px;
+            border: 1px solid #e3e6f0;
+        }
+
+        .date-day {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--vet-dark);
+        }
+
+        .date-month {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #858796;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+
+    <div id="wrapper">
+
+        {% include 'sidebar.html' %}
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <div id="content">
+
+                {% include 'topbar.html' %}
+                <div class="container-fluid">
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Calendar Programări</h1>
+                    </div>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                În Așteptare</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.asteptare }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Confirmate</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.confirmat }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 bg-gradient-primary text-white">
+                                    <h6 class="m-0 font-weight-bold"><i class="fas fa-plus-circle mr-2"></i>Programare Nouă</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="{{ url_for('show_appointments') }}">
+                                        
+                                        <div class="form-group">
+                                            <label class="font-weight-bold small text-gray-700">Alege Pacientul</label>
+                                            <select class="form-control" name="animal_select" required>
+                                                <option value="" disabled selected>-- Selectează Animal --</option>
+                                                {% for animal in lista_animale %}
+                                                    <option value="{{ animal.Id_animal }}">{{ animal.Nume }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="font-weight-bold small text-gray-700">Data și Ora Dorită</label>
+                                            <input type="datetime-local" class="form-control" name="data_ora" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="font-weight-bold small text-gray-700">Motivul Vizitei</label>
+                                            <textarea class="form-control" name="motiv" rows="3" placeholder="Ex: Vaccin anual, control..." required></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-block shadow-sm font-weight-bold" style="background-color: var(--vet-primary); border:none;">
+                                            Trimite Cererea
+                                        </button>
+                                        <small class="form-text text-muted text-center mt-2">Vom confirma programarea telefonic sau prin aplicație.</small>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Programările Mele</h6>
+                                </div>
+                                <div class="card-body">
+                                    
+                                    {% if lista_programari %}
+                                        <div class="list-group">
+                                            {% for prog in lista_programari %}
+                                                <div class="list-group-item list-group-item-action border-0 shadow-sm mb-3 appointment-card status-{{ prog.Status | replace(' ', '') }}">
+                                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                                        
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="date-box mr-3">
+                                                                <div class="date-day">{{ prog.Data_ora.strftime('%d') }}</div>
+                                                                <div class="date-month">{{ prog.Data_ora.strftime('%b') }}</div>
+                                                                <div class="small text-gray-500 mt-1">{{ prog.Data_ora.strftime('%H:%M') }}</div>
+                                                            </div>
+                                                            
+                                                            <div>
+                                                                <h5 class="mb-1 font-weight-bold text-gray-800">
+                                                                    {{ prog.NumeAnimal }} 
+                                                                    <small class="text-muted">({{ prog.Specie }})</small>
+                                                                </h5>
+                                                                <p class="mb-1 text-gray-600">{{ prog.Motiv }}</p>
+                                                                
+                                                                <div class="mt-2">
+                                                                    {% if prog.Status == 'In Asteptare' %}
+                                                                        <span class="badge badge-warning px-2 py-1"><i class="fas fa-hourglass-half mr-1"></i> În Așteptare</span>
+                                                                    {% elif prog.Status == 'Confirmat' %}
+                                                                        <span class="badge badge-success px-2 py-1"><i class="fas fa-check mr-1"></i> Confirmat</span>
+                                                                    {% elif prog.Status == 'Anulat' %}
+                                                                        <span class="badge badge-danger px-2 py-1"><i class="fas fa-times mr-1"></i> Anulat</span>
+                                                                    {% else %}
+                                                                        <span class="badge badge-info px-2 py-1">{{ prog.Status }}</span>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="ml-2 d-flex">
+                                                        
+                                                            {% if prog.Status == 'In Asteptare' %}
+                                                        
+                                                            <a href="{{ url_for('update_programare', id_programare=prog.Id_programare, actiune='confirma') }}"
+                                                                class="btn btn-success btn-circle btn-sm mr-1" title="Confirmă Programarea">
+                                                                <i class="fas fa-check"></i>
+                                                            </a>
+                                                        
+                                                            <button type="button" class="btn btn-danger btn-circle btn-sm" data-toggle="modal"
+                                                                data-target="#cancelModal{{ prog.Id_programare }}" title="Respinge Programarea">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        
+                                                            {% elif prog.Status == 'Confirmat' %}
+                                                        
+                                                            <button type="button" class="btn btn-outline-danger btn-sm rounded-circle" data-toggle="modal"
+                                                                data-target="#cancelModal{{ prog.Id_programare }}" title="Anulează Programarea">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        
+                                                            {% endif %}
+                                                        
+                                                            <div class="modal fade" id="cancelModal{{ prog.Id_programare }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                        
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title font-weight-bold text-gray-800">
+                                                                                {% if prog.Status == 'In Asteptare' %} Respinge Cererea? {% else %} Anulează Programarea? {%
+                                                                                endif %}
+                                                                            </h5>
+                                                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">×</span>
+                                                                            </button>
+                                                                        </div>
+                                                        
+                                                                        <div class="modal-body text-left">
+                                                                            Ești sigur că vrei să anulezi programarea pentru
+                                                                            <span class="font-weight-bold text-primary">{{ prog.NumeAnimal }}</span>
+                                                                            din data de <strong>{{ prog.Data_ora.strftime('%d-%m-%Y %H:%M') }}</strong>?
+                                                                        </div>
+                                                        
+                                                                        <div class="modal-footer">
+                                                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Renunță</button>
+                                                        
+                                                                            <a href="{{ url_for('update_programare', id_programare=prog.Id_programare, actiune='anuleaza') }}"
+                                                                                class="btn btn-danger">
+                                                                                Da, {% if prog.Status == 'In Asteptare' %} Respinge {% else %} Anulează {% endif %}
+                                                                            </a>
+                                                                        </div>
+                                                        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="text-center py-5">
+                                            <div class="mb-3">
+                                                <i class="fas fa-calendar-times fa-4x text-gray-300"></i>
+                                            </div>
+                                            <p class="text-gray-500 mb-0">Nu ai nicio programare viitoare.</p>
+                                            <p class="small text-gray-400">Folosește formularul din stânga pentru a face o programare.</p>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> </div>
+                </div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Puppy Vet 2025</span>
+                    </div>
+                </div>
+            </footer>
+            </div>
+        </div>
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+    <script>
+
+    $(document).ready(function() {
+        $('.modal').on('show.bs.modal', function () {
+            $(this).appendTo('body');
+        });
+    });
+</script>
+
+</body>
+
+</html>

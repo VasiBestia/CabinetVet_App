@@ -1,0 +1,44 @@
+:root {
+  --vet-primary: #0e8f8f;
+  --vet-dark: #2c3e50;
+}
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f8f9fa;
+}
+.bg-gradient-primary {
+  background-color: var(--vet-primary) !important;
+  background-image: linear-gradient(
+    180deg,
+    var(--vet-primary) 10%,
+    #00695c 100%
+  ) !important;
+}
+
+.nav-tabs .nav-link {
+  color: #858796;
+  font-weight: 500;
+}
+.nav-tabs .nav-link.active {
+  color: var(--vet-primary);
+  border-bottom: 3px solid var(--vet-primary);
+  font-weight: 700;
+}
+.tab-content {
+  padding-top: 20px;
+}
+
+.badge-temp {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.badge-weight {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}

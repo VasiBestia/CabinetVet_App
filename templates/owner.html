@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Profil Stăpân - Puppy Vet</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+        type="text/css">
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='css/owner_style.css') }}" rel="stylesheet">
+</head>
+
+<body id="page-top">
+
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+
+         <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+
+                {% include 'topbar.html' %}
+
+                <div class="container-fluid">
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    {% if setup_needed_owner %}
+                    <div class="card shadow mb-4 border-left-danger">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Bine ai venit! Completează datele tale:</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('show_owners_page') }}">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6"><label>Nume</label><input type="text"
+                                            class="form-control" name="nume" placeholder="Ex: Popescu" required></div>
+                                    <div class="form-group col-md-6"><label>Prenume</label><input type="text"
+                                            class="form-control" name="prenume" placeholder="Ex: Ion" required></div>
+                                </div>
+                                <div class="form-group"><label>Telefon</label><input type="tel" class="form-control"
+                                        name="telefon" placeholder="07xx..." required></div>
+                                <div class="form-group"><label>Adresă</label><input type="text" class="form-control"
+                                        name="adresa" placeholder="Strada, Oraș..." required></div>
+                                <button type="submit" class="btn btn-primary btn-block">Salvează Datele</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <div>
+                            <h1 class="h3 mb-0 text-gray-800 fw-bold">Panoul Meu (Stăpân)</h1>
+                            <p class="text-muted mb-0">Gestionează profilul și animalele tale.</p>
+                        </div>
+                        <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal"
+                            data-target="#editProfileModal"><i class="fas fa-pen fa-sm text-white-50 mr-2"></i> Editează
+                            Datele</button>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Animale Deținute</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.nr_animale }}
+                                            </div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-paw fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total
+                                                Vizite Clinică</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_vizite }}
+                                            </div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-notes-medical fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Status
+                                                Cont</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Activ</div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-user-check fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 mb-4">
+                            <div class="card shadow mb-4 h-100">
+                                <div class="card-header py-3 bg-gradient-primary text-white">
+                                    <h6 class="m-0 font-weight-bold"><i class="fas fa-id-card mr-2"></i>Date Personale
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-4">
+                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 10rem;"
+                                            src="{{ user.profile_picture_url }}" alt="Photo">
+                                        <h5 class="font-weight-bold">{{ stapan.nume }} {{ stapan.prenume }}</h5>
+                                        <p class="text-muted">Stăpân Înregistrat</p>
+                                    </div>
+                                    <div class="mb-3"><small class="text-muted font-weight-bold">Telefon:</small>
+                                        <div class="h6">{{ stapan.telefon }}</div>
+                                    </div>
+                                    <div class="mb-3"><small class="text-muted font-weight-bold">Adresă:</small>
+                                        <div class="h6">{{ stapan.adresa }}</div>
+                                    </div>
+                                    <hr>
+                                    <a href="{{ url_for('show_payments_page') }}" class="btn btn-outline-primary btn-block btn-sm">
+    <i class="fas fa-history mr-1"></i> Istoric Plăți
+</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-dog mr-2"></i>Animalele Mele</h6>
+    
+    <a href="{{ url_for('add_new_animal') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+        <i class="fas fa-plus fa-sm text-white-50"></i> Adaugă Animal
+    </a>
+</div>
+                                <div class="card-body">
+                                    {% if animale_list %}
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Nume</th>
+                                                    <th>Specie / Rasă</th>
+                                                    <th>Vârstă / Sex</th>
+                                                    <th>Acțiuni</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for animal in animale_list %}
+                                                <tr>
+                                                    <td class="font-weight-bold text-dark"><i
+                                                            class="fas fa-paw text-primary mr-2"></i>{{ animal.Nume }}
+                                                    </td>
+                                                    <td>{{ animal.Specie }} - {{ animal.Rasa }}</td>
+                                                    <td>{{ animal.Varsta }} ani <span class="badge badge-secondary">{{
+                                                            animal.Sex }}</span></td>
+                                                    <td><a href="{{ url_for('show_animal_page', id=animal.Id_animal) }}"
+                                                            class="btn btn-info btn-sm btn-icon-split"><span
+                                                                class="icon text-white-50"><i
+                                                                    class="fas fa-notes-medical"></i></span><span
+                                                                class="text">Vezi Dosar</span></a></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center py-5">
+                                        <img src="{{ url_for('static', filename='img/undraw_dog_walking.svg') }}"
+                                            style="height: 150px;" class="mb-3">
+                                        <p class="text-gray-500 mb-0">Nu ai niciun animal înregistrat încă.</p>
+                                        <a href="#" class="btn btn-primary mt-3">Înregistrează Primul Animal</a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4">
+                                <div class="card-body border-left-warning">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto"><i class="fas fa-bullhorn fa-2x text-warning"></i></div>
+                                        <div class="col">
+                                            <div class="font-weight-bold text-warning mb-1">Informație Utilă</div>
+                                            <p class="mb-0 small text-gray-800">Programul clinicii s-a modificat! Acum
+                                                suntem deschiși și Sâmbăta între orele 10:00 - 14:00.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Editează Datele Personale</h5><button class="close"
+                                        type="button" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">×</span></button>
+                                </div>
+                                <form method="POST" action="{{ url_for('show_owners_page') }}">
+                                    <div class="modal-body">
+                                        <div class="form-group"><label>Nume</label><input type="text"
+                                                class="form-control" name="nume" value="{{ stapan.nume }}" required>
+                                        </div>
+                                        <div class="form-group"><label>Prenume</label><input type="text"
+                                                class="form-control" name="prenume" value="{{ stapan.prenume }}"
+                                                required></div>
+                                        <div class="form-group"><label>Telefon</label><input type="text"
+                                                class="form-control" name="telefon" value="{{ stapan.telefon }}"
+                                                required></div>
+                                        <div class="form-group"><label>Adresă</label><input type="text"
+                                                class="form-control" name="adresa" value="{{ stapan.adresa }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer"><button class="btn btn-secondary" type="button"
+                                            data-dismiss="modal">Anulează</button><button type="submit"
+                                            class="btn btn-primary">Salvează Modificările</button></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+            <footer class="sticky-footer bg-white mt-auto">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Puppy Vet 2025</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+    <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+</body>
+
+</html>

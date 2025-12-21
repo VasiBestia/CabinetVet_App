@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adăugare Vizită - Puppy Vet</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+     
+    <link href="{{ url_for('static', filename='css/formular_interogation_style.css') }}" rel="stylesheet">
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="p-5">
+                            <div class="text-center mb-4">
+                                <h1 class="h3 text-gray-900 mb-2 font-weight-bold">📋 Vizită Nouă</h1>
+                                <p class="text-muted">Adaugă detaliile consultației în fișa medicală.</p>
+                            </div>
+
+                            <form class="user" action="{{ url_for('show_add_visit_form', animal_id=animal_id) }}" method="POST">
+
+                                <div class="section-title"><i class="fas fa-clock mr-2"></i>Detalii Generale</div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-4 mb-3 mb-sm-0">
+                                        <label class="small font-weight-bold">Data Vizitei</label>
+                                        <input type="date" class="form-control" name="data_vizita" required>
+                                    </div>
+                                    <div class="col-sm-4 mb-3 mb-sm-0">
+                                        <label class="small font-weight-bold">Greutate (kg)</label>
+                                        <div class="input-group">
+                                            <input type="number" step="0.1" class="form-control" name="greutate" placeholder="Ex: 15.5">
+                                            <div class="input-group-append"><span class="input-group-text">kg</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="small font-weight-bold">Temperatură (°C)</label>
+                                        <div class="input-group">
+                                            <input type="number" step="0.1" class="form-control" name="temperatura" placeholder="Ex: 38.5">
+                                            <div class="input-group-append"><span class="input-group-text">°C</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-title"><i class="fas fa-stethoscope mr-2"></i>Diagnostic & Tratament</div>
+
+                                <div class="form-group">
+                                    <label class="small font-weight-bold">Motivul Vizitei (Simptome)</label>
+                                    <input type="text" class="form-control" name="motiv" placeholder="Ex: Vărsături, Prurit, Control Rutină" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="small font-weight-bold">Diagnostic / Descriere Detaliată / Tratament Aplicat</label>
+                                    <textarea class="form-control" name="diagnostic" rows="4" placeholder="Descrie aici diagnosticul complet și tratamentul administrat..."></textarea>
+                                </div>
+
+                                <div class="section-title text-success"><i class="fas fa-syringe mr-2"></i>Vaccinare (Opțional)</div>
+                                <div class="alert alert-light border small text-muted mb-3">Completează doar dacă s-a efectuat un vaccin la această vizită.</div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label class="small font-weight-bold">Tip Vaccin</label>
+                                        <input type="text" class="form-control" name="tip_vaccin" placeholder="Ex: Polivalent, Antirabic">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="small font-weight-bold">Dată Rapel (Următorul Vaccin)</label>
+                                        <input type="date" class="form-control" name="data_rapel">
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <div class="row">
+                                    <div class="col-sm-6 mb-2">
+                                        <a href="{{ url_for('show_animal_page', id=animal_id) }}" class="btn btn-secondary btn-block" style="border-radius: 10px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-arrow-left mr-2"></i> Anulează
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button type="submit" class="btn btn-primary btn-block" style="border-radius: 10px; height: 45px;">
+                                            <i class="fas fa-save mr-2"></i> Salvează Vizita
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/datavizite.js') }}"></script>
+
+</body>
+</html>

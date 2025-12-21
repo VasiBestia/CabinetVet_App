@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Puppy Vet - Panou de Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='css/dashboard_style.css') }}" rel="stylesheet">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+
+         <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+
+                {% include 'topbar.html' %}
+
+                <div class="container-fluid">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800 fw-bold">Panou de Control</h1>
+                        <a href="{{ url_for('show_add_visit_form', animal_id=0) }}"
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                            style="background-color: var(--vet-primary); border:none;">
+                            <i class="fas fa-plus fa-sm text-white-50"></i> Vizită Nouă
+                        </a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card stat-card h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-label">Pacienți Total</div>
+                                            <div class="text-value">{{ nr_animale }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon-box icon-bg-teal"><i class="fas fa-paw"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card stat-card h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-label">Clienți</div>
+                                            <div class="text-value">{{ nr_stapani }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon-box icon-bg-orange"><i class="fas fa-users"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card stat-card h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-label">Vizite (Luna Asta)</div>
+                                            <div class="text-value">{{ nr_activitate_luna }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon-box icon-bg-blue"><i class="fas fa-calendar-check"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card stat-card h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-label">Total Fișe Medicale</div>
+                                            <div class="text-value">{{ nr_consultatii }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon-box icon-bg-purple"><i class="fas fa-file-medical"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                        <div class="card shadow mb-4" style="border-radius: 16px; border:none;">
+                            <div class="card-header py-3 bg-white" style="border-radius: 16px 16px 0 0;">
+                                <h6 class="m-0 font-weight-bold" style="color: var(--vet-primary);">
+                                    <i class="fas fa-chart-bar mr-2"></i>Statistici Specii
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-bar" style="position: relative; height: 300px;">
+                                    <canvas id="speciesBarChart"></canvas>
+                                </div>
+                                <div class="mt-3 text-center small text-muted">
+                                    Comparativ număr pacienți înregistrați pe categorii.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4 h-100" style="border-radius: 16px; border:none;">
+                                <div class="card-body d-flex align-items-center justify-content-center text-center">
+                                    <div>
+                                        <img src="https://plus.unsplash.com/premium_photo-1661962620229-614e281fe009?fm=jpg&q=80&w=1200&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            class="img-fluid rounded-4 shadow-lg styled-image" alt="Veterinarian with dog">
+                                        <h5 class="mt-3 text-gray-600">Bine ai venit la Puppy Vet!</h5>
+                                        <p class="small text-gray-500">Gestionează pacienții și fișele medicale ușor și
+                                            rapid.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <footer class="sticky-footer bg-white mt-5">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto"><span>Copyright &copy; Puppy Vet 2025</span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Gata de plecare?</h5><button class="btn-close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Selectează "Logout" pentru a încheia.</div>
+                <div class="modal-footer border-0"><button class="btn btn-secondary"
+                        data-bs-dismiss="modal">Anulează</button><a class="btn btn-danger"
+                        href="{{ url_for('logout') }}">Logout</a></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Luăm datele din Python
+            const chartLabels = {{ pie_labels_json | safe }};
+            const chartData = {{ pie_values_json | safe }};
+
+            console.log("Labels din DB:", chartLabels);
+            console.log("Data din DB:", chartData);
+
+            const ctx = document.getElementById("speciesBarChart");
+
+            if (ctx && chartLabels.length > 0) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: 'Număr Animale',
+                            data: chartData,
+                            backgroundColor: ['#0e8f8f', '#ff7043', '#36b9cc', '#f6c23e'],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                        }
+                    }
+                });
+            } else {
+                console.warn("Nu sunt date pentru grafic sau canvas-ul lipsește.");
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+:root {
+  --vet-primary: #0e8f8f;
+  --vet-secondary: #e0f2f1;
+  --vet-accent: #ff7043;
+  --vet-dark: #2c3e50;
+  --card-radius: 16px;
+}
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f8f9fa;
+}
+.bg-gradient-primary {
+  background-color: var(--vet-primary) !important;
+  background-image: linear-gradient(
+    180deg,
+    var(--vet-primary) 10%,
+    #00695c 100%
+  ) !important;
+}
+.stat-card {
+  border: none;
+  border-radius: var(--card-radius);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+  background: white;
+}
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+.icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.icon-bg-teal {
+  background: rgba(14, 143, 143, 0.1);
+  color: var(--vet-primary);
+}
+.icon-bg-orange {
+  background: rgba(255, 112, 67, 0.1);
+  color: var(--vet-accent);
+}
+.icon-bg-blue {
+  background: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+.icon-bg-purple {
+  background: rgba(111, 66, 193, 0.1);
+  color: #6f42c1;
+}
+.text-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8898aa;
+  font-weight: 600;
+}
+.text-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--vet-dark);
+  margin-top: 5px;
+}
+.chart-container {
+  position: relative;
+  margin: auto;
+  height: 300px;
+  width: 100%;
+}
+
+.custom-image-container {
+            /* Poți ajusta această valoare. col-md-8 din Bootstrap va face treaba, 
+               dar asta e o siguranță în plus. */
+            max-width: 80%; 
+        }
+        .styled-image {
+            opacity: 0.9; /* O opacitate puțin mai mare arată mai bine */
+            transition: all 0.3s ease-in-out;
+            object-fit: cover;
+            max-height: 400px; /* O înălțime maximă rezonabilă */
+            width: 100%; /* Se asigură că umple containerul părintelui */
+        }
+        .styled-image:hover {
+            opacity: 1;
+            transform: scale(1.02);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+        }

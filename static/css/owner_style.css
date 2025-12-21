@@ -1,0 +1,19 @@
+:root {
+            --vet-primary: #0e8f8f;
+            --vet-dark: #2c3e50;
+        }
+        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
+        .bg-gradient-primary { background-color: var(--vet-primary) !important; background-image: linear-gradient(180deg, var(--vet-primary) 10%, #00695c 100%) !important; }
+        
+        /* Fix Footer la baza paginii */
+        #content-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        #content {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }

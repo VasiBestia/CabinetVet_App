@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Veterinary Clinic Login">
+    <meta name="author" content="">
+
+    <title>Vet Clinic - Autentificare</title>
+
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='css/login_style.css') }}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <div class="mb-3 text-success">
+                                            <i class="fas fa-heartbeat fa-3x"></i>
+                                        </div>
+                                        <h1 class="h4 text-gray-900 mb-4">Portal Veterinar</h1>
+                                        <p class="mb-4 text-muted small">Accesează istoricul pacienților tăi.</p>
+                                    </div>
+
+                                    <form class="user" action="/login" method="POST">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-user"
+                                                id="email" name="email"
+                                                placeholder="Adresa de Email...">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user"
+                                                id="password" name="password" placeholder="Parola...">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck" name="remember_me">
+                                                <label class="custom-control-label" for="customCheck">Ține-mă minte</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="showPasswordcheck">
+                                                <label class="custom-control-label" for="showPasswordcheck">Arată parola</label>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            Autentificare
+                                        </button>
+                                        
+                                        <hr>
+                                        
+                                        <a href="{{ url_for('google_login') }}" class="btn btn-google btn-user btn-block">
+                                            <i class="fab fa-google fa-fw"></i> Intră cu Google
+                                        </a>
+                                        <a href="index.html" class="btn btn-facebook btn-user btn-block text-white">
+                                            <i class="fab fa-facebook-f fa-fw"></i> Intră cu Facebook
+                                        </a>
+                                    </form>
+                                    
+                                    <hr>
+                                    
+                                    <div class="text-center">
+                                        <a class="small" href="{{ url_for('show_forgot_password_page') }}">Ai uitat parola?</a>
+                                    </div>
+                                    <div class="text-center">
+                                        <a class="small" href="{{ url_for('show_register_page') }}">Creează un cont nou!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/showpassword.js') }}"></script>
+
+</body>
+</html>

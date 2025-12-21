@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Istoric Plăți - Puppy Vet</title>
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <style>
+        :root { --vet-primary: #0e8f8f; }
+        .bg-gradient-primary { background-color: var(--vet-primary) !important; background-image: linear-gradient(180deg, var(--vet-primary) 10%, #00695c 100%) !important; }
+        .status-badge { padding: 5px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; }
+        .status-achitat { background-color: #d1e7dd; color: #0f5132; }
+        .status-asteptare { background-color: #fff3cd; color: #664d03; }
+    </style>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+
+         <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+
+                {% include 'topbar.html' %}
+
+                <div class="container-fluid">
+
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Cheltuit (Global)</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total }} RON</div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-wallet fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Tranzacții Recente</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" width="100%" cellspacing="0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Descriere Serviciu</th>
+                                            <th>Sumă</th>
+                                            <th>Status</th>
+                                            <th>Factură</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for plata in plati %}
+                                        <tr>
+                                            <td>{{ plata.Data_plata.strftime('%d-%m-%Y') }}</td>
+                                            <td>{{ plata.Descriere }}</td>
+                                            <td class="font-weight-bold">{{ plata.Suma }} RON</td>
+                                            <td>
+                                                {% if plata.Status == 'Achitat' %}
+                                                    <span class="status-badge status-achitat">Achitat</span>
+                                                {% else %}
+                                                    <span class="status-badge status-asteptare">{{ plata.Status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+    <a href="{{ url_for('generate_invoice', id_plata=plata.Id_plata) }}" class="btn btn-sm btn-outline-primary">
+        <i class="fas fa-download mr-1"></i> PDF
+    </a>
+</td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted py-4">Nu există plăți înregistrate.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <footer class="sticky-footer bg-white mt-auto">
+                <div class="container my-auto"><div class="copyright text-center my-auto"><span>Copyright &copy; Puppy Vet 2025</span></div></div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

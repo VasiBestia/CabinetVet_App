@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Profilul Meu - Puppy Vet</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/profile_style.css') }}" rel="stylesheet">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+
+         <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+
+                {% include 'topbar.html' %}
+
+                <div class="container-fluid">
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm mb-4">{{ message
+                        }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    <h1 class="h3 mb-4 text-gray-800 fw-bold">Setări Profil</h1>
+
+                    <form method="POST" action="{{ url_for('show_profile_page') }}" enctype="multipart/form-data">
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-5 mb-4">
+                                <div class="card shadow h-100 border-0 profile-header-card">
+                                    <div class="card-body">
+                                        <div class="profile-img-container">
+                                            <img src="{{ user.profile_picture_url }}" id="img_preview"
+                                                class="profile-img" alt="Profile Picture">
+                                            <label for="file_poza" class="camera-btn shadow">
+                                                <i class="fas fa-camera"></i>
+                                            </label>
+                                            <input type="file" id="file_poza" name="file_poza" style="display: none;"
+                                                accept="image/*">
+                                        </div>
+                                        <h5 class="font-weight-bold text-dark mb-1">{{ user.username }}</h5>
+                                        <p class="text-muted small mb-3">{{ user.email }}</p>
+                                        <div class="badge badge-success px-3 py-2">Cont Activ</div>
+                                        <p class="text-xs text-muted mt-3">Apasă pe iconița camerei pentru a schimba
+                                            poza. <br>Nu uita să salvezi!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-8 col-lg-7">
+                                <div class="card shadow mb-4 border-0">
+                                    <div class="card-body p-4">
+                                        <h6 class="card-title-modern">Date Personale (Stăpân)</h6>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label class="small mb-1 font-weight-bold">Username</label>
+                                                <input type="text" class="form-control" value="{{ user.username }}"
+                                                    readonly>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label class="small mb-1 font-weight-bold">Email</label>
+                                                <input type="email" class="form-control" value="{{ user.email }}"
+                                                    readonly>
+                                            </div>
+                                        </div>
+
+                                        <hr class="my-4">
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label class="small mb-1 font-weight-bold">Nume</label>
+                                                <input type="text" class="form-control" name="nume"
+                                                    value="{{ stapan.nume }}" placeholder="Ex: Popescu">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label class="small mb-1 font-weight-bold">Prenume</label>
+                                                <input type="text" class="form-control" name="prenume"
+                                                    value="{{ stapan.prenume }}" placeholder="Ex: Ion">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label class="small mb-1 font-weight-bold">Telefon</label>
+                                                <input type="tel" class="form-control" name="telefon"
+                                                    value="{{ stapan.telefon }}" placeholder="Ex: 0740...">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label class="small mb-1 font-weight-bold">Adresă</label>
+                                                <input type="text" class="form-control" name="adresa"
+                                                    value="{{ stapan.adresa }}" placeholder="Ex: Str. Principala nr. 1">
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-end mt-4">
+                                            <button type="submit" class="btn btn-primary px-4 py-2 shadow-sm"
+                                                style="background-color: var(--vet-primary); border:none;">
+                                                <i class="fas fa-save fa-sm text-white-50 mr-2"></i> Salvează
+                                                Modificările
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <footer class="sticky-footer bg-white mt-auto">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto"><span>Copyright &copy; Puppy Vet 2025</span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title font-weight-bold">Gata de plecare?</h5><button class="close"
+                        data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">Selectează "Logout" pentru a încheia sesiunea.</div>
+                <div class="modal-footer border-0">
+                    <button class="btn btn-secondary" data-dismiss="modal">Anulează</button>
+                    <a class="btn btn-danger" href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/image_preview.js') }}"></script>
+
+</body>
+
+</html>
