@@ -28,6 +28,36 @@ The application focuses on a seamless user experience for both veterinary staff 
 
 ---
 
+## 🗓️ Project Management & Workflow
+
+To keep the development focused and avoid "feature creep," I adopted an **Agile/Kanban** workflow. This allowed me to prioritize critical features (like the Medical History) over "nice-to-have" ones (like SMS reminders).
+
+![Workflow](screenshots/workflow.png)
+
+### 🚀 Development Roadmap Status
+
+#### ✅ Phase 1: The Foundation (Core)
+* **Completed:** Setup Flask Environment, SQL Connection, and User Authentication (Login/Register/Google).
+* *Why:* Without a secure base, building features is risky.
+
+#### ✅ Phase 2: Data Logic (The "Brain")
+* **Completed:** Database Schema, Patient CRUD, Medical History, Vaccination Logic.
+* *Why:* This is the core business logic. I spent the most time here ensuring the SQL relationships were correct.
+
+#### ✅ Phase 3: Interactivity (The "Flow")
+* **Completed:** Appointment Requests, Confirmation Workflow (Modals), Notifications.
+* *Why:* This connects the data to the daily human workflow of the clinic.
+
+#### ✅ Phase 4: Business Intelligence (The "Value")
+* **Completed:** Dashboard Analytics, PDF Invoicing.
+* *Why:* Converting raw data into insights (Charts) and documents (Invoices) adds real business value.
+
+#### 🚧 Phase 5: Future Iterations (Backlog & In Progress)
+* [ ] **Automated SMS Reminders** `in-progress` - Working on Twilio integration.
+* [ ] **Inventory Management** `planned` - To track medicine stock.
+* [ ] **Mobile App API** `future` - Exposing endpoints for a React Native app.
+
+
 ## ✨ Key Features
 
 ### 🔐 Security & Authentication
