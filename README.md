@@ -32,7 +32,7 @@ The application focuses on a seamless user experience for both veterinary staff 
 
 To keep the development focused and avoid "feature creep," I adopted an **Agile/Kanban** workflow. This allowed me to prioritize critical features (like the Medical History) over "nice-to-have" ones (like SMS reminders).
 
-![Workflow](screenshots/workflow.png)
+![Workflow](screenshots/github_project_ideas.png)
 
 ### 🚀 Development Roadmap Status
 
