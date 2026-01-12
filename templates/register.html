@@ -82,15 +82,15 @@
                                 <a href="{{ url_for('google_login') }}" class="btn btn-google btn-user btn-block">
                                     <i class="fab fa-google fa-fw"></i> Register with Google
                                 </a>
-                                <a href="#" class="btn btn-facebook btn-user btn-block text-white">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
+                                <a href="{{ url_for('facebook_login') }}"  class="btn btn-facebook btn-user btn-block text-white">
+                                            <i class="fab fa-facebook-f fa-fw"></i> Intră cu Facebook
+                                    </a>
                             </form>
                             
                             <hr>
                             
                             <div class="text-center">
-                                <a class="small" href="{{ url_for('show_forgot_password_page') }}">Forgot Password?</a>
+                                <a class="small" href="{{ url_for('forgot_password_page') }}">Forgot Password?</a>
                             </div>
                             <div class="text-center">
                                 <a class="small" href="{{ url_for('show_login_page') }}">Already have an account? Login!</a>

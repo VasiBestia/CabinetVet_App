@@ -155,7 +155,7 @@
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
     <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-dog mr-2"></i>Animalele Mele</h6>
     
-    <a href="{{ url_for('add_new_animal') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+    <a href="{{ url_for('show_animal_page', id=0) }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
         <i class="fas fa-plus fa-sm text-white-50"></i> Adaugă Animal
     </a>
 </div>
@@ -190,13 +190,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    {% else %}
-                                    <div class="text-center py-5">
-                                        <img src="{{ url_for('static', filename='img/undraw_dog_walking.svg') }}"
-                                            style="height: 150px;" class="mb-3">
-                                        <p class="text-gray-500 mb-0">Nu ai niciun animal înregistrat încă.</p>
-                                        <a href="#" class="btn btn-primary mt-3">Înregistrează Primul Animal</a>
-                                    </div>
+                                    
                                     {% endif %}
                                 </div>
                             </div>

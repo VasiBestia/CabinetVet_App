@@ -42,7 +42,7 @@
                                         <p class="mb-4 text-muted small">Accesează istoricul pacienților tăi.</p>
                                     </div>
 
-                                    <form class="user" action="/login" method="POST">
+                                    <form class="user" action="{{ url_for('show_login_page') }}" method="POST">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                 id="email" name="email"
@@ -76,7 +76,7 @@
                                         <a href="{{ url_for('google_login') }}" class="btn btn-google btn-user btn-block">
                                             <i class="fab fa-google fa-fw"></i> Intră cu Google
                                         </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block text-white">
+                                        <a href="{{ url_for('facebook_login') }}"  class="btn btn-facebook btn-user btn-block text-white">
                                             <i class="fab fa-facebook-f fa-fw"></i> Intră cu Facebook
                                         </a>
                                     </form>
@@ -84,7 +84,7 @@
                                     <hr>
                                     
                                     <div class="text-center">
-                                        <a class="small" href="{{ url_for('show_forgot_password_page') }}">Ai uitat parola?</a>
+                                        <a class="small" href="{{ url_for('forgot_password_page') }}">Ai uitat parola?</a>
                                     </div>
                                     <div class="text-center">
                                         <a class="small" href="{{ url_for('show_register_page') }}">Creează un cont nou!</a>
