@@ -18,7 +18,7 @@
     <div id="wrapper">
         {% include 'sidebar.html' %}
 
-         <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
 
                 {% include 'topbar.html' %}
@@ -100,78 +100,300 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-lg-6 mb-4">
-                        <div class="card shadow mb-4" style="border-radius: 16px; border:none;">
-                            <div class="card-header py-3 bg-white" style="border-radius: 16px 16px 0 0;">
-                                <h6 class="m-0 font-weight-bold" style="color: var(--vet-primary);">
-                                    <i class="fas fa-chart-bar mr-2"></i>Statistici Specii
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-bar" style="position: relative; height: 300px;">
-                                    <canvas id="speciesBarChart"></canvas>
+                            <div class="card shadow mb-4" style="border-radius: 16px; border:none;">
+                                <div class="card-header py-3 bg-white" style="border-radius: 16px 16px 0 0;">
+                                    <h6 class="m-0 font-weight-bold" style="color: var(--vet-primary);">
+                                        <i class="fas fa-chart-bar mr-2"></i>Statistici Specii
+                                    </h6>
                                 </div>
-                                <div class="mt-3 text-center small text-muted">
-                                    Comparativ număr pacienți înregistrați pe categorii.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <div class="col-lg-6 mb-4">
-                            <div class="card shadow mb-4 h-100" style="border-radius: 16px; border:none;">
-                                <div class="card-body d-flex align-items-center justify-content-center text-center">
-                                    <div>
-                                        <img src="https://plus.unsplash.com/premium_photo-1661962620229-614e281fe009?fm=jpg&q=80&w=1200&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            class="img-fluid rounded-4 shadow-lg styled-image" alt="Veterinarian with dog">
-                                        <h5 class="mt-3 text-gray-600">Bine ai venit la Puppy Vet!</h5>
-                                        <p class="small text-gray-500">Gestionează pacienții și fișele medicale ușor și
-                                            rapid.</p>
+                                <div class="card-body">
+                                    <div class="chart-bar" style="position: relative; height: 300px;">
+                                        <canvas id="speciesBarChart"></canvas>
+                                    </div>
+                                    <div class="mt-3 text-center small text-muted">
+                                        Comparativ număr pacienți înregistrați pe categorii.
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">
+                                        <i class="fas fa-crown text-warning mr-2"></i> Top Clienți VIP
+                                    </h6>
+                                    <span class="badge badge-success">Cheltuieli > Media Clinicii</span>
+                                </div>
+                                <div class="card-body">
+                                    {% if vip_clients %}
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nume Client</th>
+                                                    <th>Total Achitat (RON)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for client in vip_clients %}
+                                                <tr>
+                                                    <td>{{ client.Nume }} {{ client.Prenume }}</td>
+                                                    <td class="font-weight-bold text-dark">
+                                                        {{ "%.2f"|format(client.TotalCheltuit) }} RON
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
+                                    <p class="text-center text-gray-500 my-4">Încă nu există suficiente date financiare.
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-danger">
+                                        <i class="fas fa-paw text-danger mr-2"></i> Rase "High Maintenance"
+                                    </h6>
+                                    <span class="badge badge-warning">Cost > Media Speciei</span>
+                                </div>
+                                <div class="card-body">
+                                    {% if expensive_breeds %}
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Specie</th>
+                                                    <th>Rasă</th>
+                                                    <th>Cost Mediu (RON)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for breed in expensive_breeds %}
+                                                <tr>
+                                                    <td>
+                                                        {% if breed.Specie == 'Caine' or breed.Specie == 'Câine' %}
+                                                        <i class="fas fa-dog"></i>
+                                                        {% elif breed.Specie == 'Pisica' or breed.Specie == 'Pisică' %}
+                                                        <i class="fas fa-cat"></i>
+                                                        {% else %}
+                                                        {{ breed.Specie }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ breed.Rasa }}</td>
+                                                    <td class="font-weight-bold text-danger">
+                                                        {{ breed.CostMediuPerRasa }} RON
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
+                                    <p class="text-center text-gray-500 my-4">Nu există discrepanțe majore de cost între
+                                        rase momentan.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4 border-left-warning">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-warning">
+                                        <i class="fas fa-notes-medical mr-2"></i> Cazuri de Recidivă Rapidă (< 30 Zile)
+                                            </h6>
+                                            <span class="badge badge-secondary">Monitorizare Atentă</span>
+                                </div>
+                                <div class="card-body">
+                                    {% if recidiva_list %}
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" width="100%" cellspacing="0">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Pacient</th>
+                                                    <th>Diagnostic Recurent</th>
+                                                    <th>Data Ultimei Recidive</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for caz in recidiva_list %}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ caz.NumeAnimal }}</strong>
+                                                        <span class="small text-muted">({{ caz.Specie }})</span>
+                                                    </td>
+                                                    <td class="text-danger">{{ caz.Diagnostic }}</td>
+                                                    <td>{{ caz.DataRecidiva.strftime('%d-%m-%Y') }}</td>
+                                                    <td>
+                                                        <span class="btn btn-sm btn-circle btn-warning">
+                                                            <i class="fas fa-exclamation"></i>
+                                                        </span>
+                                                        <span class="small ml-1">Necesită Reevaluare</span>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
+                                    <p class="text-center text-success my-4">
+                                        <i class="fas fa-check-circle fa-2x mb-2"></i><br>
+                                        Excelent! Nu există cazuri de recidivă rapidă în ultima perioadă.
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow mb-4 border-bottom-danger">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-danger">
+                                    <i class="fas fa-syringe mr-2"></i> Vaccinuri Expirate (Necesită Rapel)
+                                </h6>
+                                <span class="badge badge-danger">Acțiune Imediată</span>
+                            </div>
+                            <div class="card-body">
+                                {% if vulnerable_list %}
+                                <div class="table-responsive">
+                                    <table class="table table-sm" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Animal</th>
+                                                <th>Vaccin</th>
+                                                <th>Data Expirării</th>
+                                                <th>Contact</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in vulnerable_list %}
+                                            <tr>
+                                                <td class="font-weight-bold">{{ row.NumeAnimal }}</td>
+                                                <td>{{ row.Tip_vaccin }}</td>
+                                                <td class="text-danger">
+                                                    {{ row.Data_rapel.strftime('%d-%m-%Y') }}
+                                                </td>
+                                                <td>
+                                                    <a href="tel:{{ row.Telefon }}"
+                                                        class="btn btn-sm btn-success btn-circle" title="Sună Stăpânul">
+                                                        <i class="fas fa-phone"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <p class="text-center text-gray-500 my-4">Toate animalele sunt la zi cu vaccinurile!</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow mb-4 border-bottom-info">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-info">
+                                    <i class="fas fa-chart-pie mr-2"></i> Afecțiunea Dominantă / Specie
+                                </h6>
+                                <span class="badge badge-info">Epidemiologie</span>
+                            </div>
+                            <div class="card-body">
+                                {% if top_disease_list %}
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered" width="100%" cellspacing="0">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th width="30%">Specie</th>
+                                                <th>Diagnostic Frecvent (#1)</th>
+                                                <th width="20%">Cazuri</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in top_disease_list %}
+                                            <tr>
+                                                <td class="text-center">
+                                                    {% if 'Caine' in row.Specie or 'Câine' in row.Specie %}
+                                                    <i class="fas fa-dog fa-lg text-gray-600"></i> Câine
+                                                    {% elif 'Pisica' in row.Specie or 'Pisică' in row.Specie %}
+                                                    <i class="fas fa-cat fa-lg text-gray-600"></i> Pisică
+                                                    {% else %}
+                                                    <i class="fas fa-paw fa-lg text-gray-600"></i> {{ row.Specie }}
+                                                    {% endif %}
+                                                </td>
+                                                <td class="font-weight-bold text-dark">{{ row.Diagnostic }}</td>
+                                                <td class="text-center">
+                                                    <span class="btn btn-sm btn-info btn-circle">
+                                                        {{ row.NrCazuri }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <p class="text-center text-gray-500 my-4">Nu există suficiente date medicale.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="sticky-footer bg-white mt-5">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto"><span>Copyright &copy; Puppy Vet 2025</span></div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+        <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title fw-bold">Gata de plecare?</h5><button class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">Selectează "Logout" pentru a încheia.</div>
+                    <div class="modal-footer border-0"><button class="btn btn-secondary"
+                            data-bs-dismiss="modal">Anulează</button><a class="btn btn-danger"
+                            href="{{ url_for('logout') }}">Logout</a></div>
                 </div>
             </div>
-            <footer class="sticky-footer bg-white mt-5">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto"><span>Copyright &copy; Puppy Vet 2025</span></div>
-                </div>
-            </footer>
         </div>
-    </div>
 
-    <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">Gata de plecare?</h5><button class="btn-close"
-                        data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">Selectează "Logout" pentru a încheia.</div>
-                <div class="modal-footer border-0"><button class="btn btn-secondary"
-                        data-bs-dismiss="modal">Anulează</button><a class="btn btn-danger"
-                        href="{{ url_for('logout') }}">Logout</a></div>
-            </div>
-        </div>
-    </div>
+        <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
 
-    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Luăm datele din Python
-            const chartLabels = {{ pie_labels_json | safe }};
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Luăm datele din Python
+                const chartLabels = {{ pie_labels_json | safe
+            }};
             const chartData = {{ pie_values_json | safe }};
 
             console.log("Labels din DB:", chartLabels);
@@ -206,7 +428,7 @@
                 console.warn("Nu sunt date pentru grafic sau canvas-ul lipsește.");
             }
         });
-    </script>
+        </script>
 </body>
 
 </html>

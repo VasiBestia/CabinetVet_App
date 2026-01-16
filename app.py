@@ -261,6 +261,7 @@ def google_login():
     redirect_uri = fl.url_for("google_callback", _external=True)
     return google.authorize_redirect(redirect_uri)
 
+
 @app.route("/login/facebook")
 def facebook_login():
     # Trimitem userul către Facebook (Hardcodat localhost pentru siguranță)
@@ -330,7 +331,7 @@ def forgot_password_page():
             try:
                 # Verificăm rapid dacă există emailul
                 if db.session.execute(
-                    text("SELECT 1 FROM USER_ACCOUNT WHERE Email = :e"), {"e": email}
+                    text("SFLECT 1 FROM USER_ACCOUNT WHERE Email = :e"), {"e": email}
                 ).fetchone():
                     fl.session["reset_email"] = email
                     fl.flash("Adresa confirmată. Introdu noua parolă.", "success")
@@ -430,6 +431,128 @@ def index():
     pie_labels_json = json.dumps([row[0] for row in rezultat_pie])
     pie_values_json = json.dumps([row[1] for row in rezultat_pie])
 
+    sql_vip = """
+        SELECT TOP 5 S.Nume, S.Prenume, SUM(P.Suma) as TotalCheltuit
+        FROM STAPAN S
+        JOIN PLATI P ON S.Id_stapan = P.Id_stapan
+        WHERE P.Status = 'Achitat'
+        GROUP BY S.Nume, S.Prenume
+        HAVING SUM(P.Suma) > (
+            SELECT AVG(TotalPerUser)
+            FROM (
+                SELECT SUM(Suma) as TotalPerUser
+                FROM PLATI
+                WHERE Status = 'Achitat'
+                GROUP BY Id_stapan
+            ) as SubqueryMedie
+        )
+        ORDER BY TotalCheltuit DESC
+    """
+
+    try:
+        vip_clients = db.session.execute(text(sql_vip)).fetchall()
+    except Exception as e:
+        print(f"Eroare VIP query: {e}")
+        vip_clients = []
+
+    sql_breeds = """
+        SELECT TOP 5 A.Specie, A.Rasa, CAST(AVG(P.Suma) AS DECIMAL(10,2)) AS CostMediuPerRasa
+        FROM ANIMAL A
+        JOIN STAPAN S ON A.Id_stapan = S.Id_stapan
+        JOIN PLATI P ON S.Id_stapan = P.Id_stapan
+        WHERE P.Status = 'Achitat'
+        GROUP BY A.Specie, A.Rasa
+        HAVING AVG(P.Suma) > (
+            
+            SELECT AVG(P2.Suma)
+            FROM PLATI P2
+            JOIN STAPAN S2 ON P2.Id_stapan = S2.Id_stapan
+            JOIN ANIMAL A2 ON S2.Id_stapan = A2.Id_stapan
+            WHERE A2.Specie = A.Specie 
+        )
+        ORDER BY CostMediuPerRasa DESC
+    """
+    try:
+        expensive_breeds = db.session.execute(text(sql_breeds)).fetchall()
+    except Exception as e:
+        print(f"Eroare Breeds query: {e}")
+        expensive_breeds = []
+
+    sql_recidiva = """
+        SELECT TOP 5 
+            A.Nume AS NumeAnimal, 
+            A.Specie, 
+            F1.Diagnostic, 
+            F1.Data_vizita AS DataRecidiva,
+            (SELECT TOP 1 Data_vizita FROM FISA_MEDICALA WHERE Id_fisa = F1.Id_fisa) as DataInitiala
+        FROM FISA_MEDICALA F1
+        JOIN ANIMAL A ON F1.Id_animal = A.Id_animal
+        WHERE EXISTS (
+            
+            SELECT 1 
+            FROM FISA_MEDICALA F2
+            WHERE F2.Id_animal = F1.Id_animal       
+              AND F2.Diagnostic = F1.Diagnostic     
+              AND F2.Id_fisa <> F1.Id_fisa          
+              AND F2.Data_vizita < F1.Data_vizita   
+              AND F2.Data_vizita >= DATEADD(day, -30, F1.Data_vizita)
+        )
+        ORDER BY F1.Data_vizita DESC
+    """
+    try:
+        recidiva_list = db.session.execute(text(sql_recidiva)).fetchall()
+    except Exception as e:
+        print(f"Eroare Recidiva query: {e}")
+        recidiva_list = []
+
+    sql_vulnerable = """
+        SELECT TOP 5 
+            A.Nume AS NumeAnimal, 
+            S.Telefon, 
+            V.Tip_vaccin, 
+            V.Data_rapel
+        FROM ANIMAL A
+        JOIN STAPAN S ON A.Id_stapan = S.Id_stapan
+        JOIN VACCINARI V ON A.Id_animal = V.Id_animal
+        WHERE V.Data_rapel < GETDATE()
+        AND V.Id_vaccin = (
+            
+            SELECT TOP 1 V2.Id_vaccin
+            FROM VACCINARI V2
+            WHERE V2.Id_animal = A.Id_animal
+            ORDER BY V2.Data_vaccinare DESC
+        )
+        ORDER BY V.Data_rapel ASC 
+    """
+    try:
+        vulnerable_list = db.session.execute(text(sql_vulnerable)).fetchall()
+    except Exception as e:
+        print(f"Eroare Vulnerable query: {e}")
+        vulnerable_list = []
+
+    sql_top_disease = """
+        SELECT Specie, Diagnostic, NrCazuri
+        FROM (
+            SELECT 
+                A.Specie,
+                F.Diagnostic,
+                COUNT(F.Id_fisa) as NrCazuri,
+                -- WINDOW FUNCTION: Face clasament separat pentru fiecare specie
+                ROW_NUMBER() OVER(PARTITION BY A.Specie ORDER BY COUNT(F.Id_fisa) DESC) as Rank
+            FROM FISA_MEDICALA F
+            JOIN ANIMAL A ON F.Id_animal = A.Id_animal
+            WHERE F.Diagnostic IS NOT NULL AND F.Diagnostic <> ''
+            GROUP BY A.Specie, F.Diagnostic
+        ) T
+        WHERE Rank = 1 
+        ORDER BY NrCazuri DESC
+    """
+    try:
+        top_disease_list = db.session.execute(text(sql_top_disease)).fetchall()
+    except Exception as e:
+        print(f"Eroare Top Disease query: {e}")
+        top_disease_list = []
+
     # NOTĂ: Nu mai trimitem 'user=user_data', se ocupă context_processor-ul global
     return fl.render_template(
         "dashboard.html",
@@ -439,6 +562,11 @@ def index():
         nr_activitate_luna=card_activitate_luna,
         pie_labels_json=pie_labels_json,
         pie_values_json=pie_values_json,
+        vip_clients=vip_clients,
+        expensive_breeds=expensive_breeds,
+        recidiva_list=recidiva_list,
+        vulnerable_list=vulnerable_list,
+        top_disease_list=top_disease_list,
     )
 
 
